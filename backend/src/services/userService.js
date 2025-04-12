@@ -15,6 +15,20 @@ class ValidationError extends Error {
   }
 }
 
+class UserNotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'UserNotFoundError';
+  }
+}
+
+class LastAdminError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'LastAdminError';
+  }
+}
+
 class UserService {
   async registerUser(userData) {
     // Validaciones básicas
@@ -50,6 +64,29 @@ class UserService {
       throw new ValidationError('Credenciales inválidas');
     }
 
+    return user;
+  }
+
+  async getAllUsers() {
+    return await User.find().select('-password');
+  }
+
+  async setAdminStatus(userId, isAdmin, requestingUserId) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError('Usuario no encontrado');
+    }
+
+    // Verificar si es el último admin intentando quitarse el rol
+    if (!isAdmin && userId === requestingUserId) {
+      const adminCount = await User.countDocuments({ isAdmin: true });
+      if (adminCount <= 1) {
+        throw new LastAdminError('No puede revocar su propio rol de administrador siendo el último admin');
+      }
+    }
+
+    user.isAdmin = isAdmin;
+    await user.save();
     return user;
   }
 
