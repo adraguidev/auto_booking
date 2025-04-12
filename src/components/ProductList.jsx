@@ -1,44 +1,99 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import ProductCard from './ProductCard';
 
 function ProductList() {
-  const products = [
-    {
-      id: 1,
-      name: 'Toyota Corolla',
-      price: 1500,
-      image: 'https://via.placeholder.com/300x200',
-      category: 'Sedán'
-    },
-    {
-      id: 2,
-      name: 'Honda CR-V',
-      price: 2000,
-      image: 'https://via.placeholder.com/300x200',
-      category: 'SUV'
-    },
-    {
-      id: 3,
-      name: 'Ford Mustang',
-      price: 2500,
-      image: 'https://via.placeholder.com/300x200',
-      category: 'Deportivo'
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const productsPerPage = 10;
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/products');
+        if (!response.ok) {
+          throw new Error('Error al cargar los productos');
+        }
+        const data = await response.json();
+        setProducts(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const visibleProducts = products.slice(startIndex, startIndex + productsPerPage);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
     }
-  ];
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Cargando productos...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   return (
-    <div className="product-list">
-      <h2>Recomendados</h2>
-      <div className="products-grid">
-        {products.map((product) => (
-          <div key={product.id} className="product-card">
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p className="price">${product.price}/día</p>
-            <p className="category">{product.category}</p>
+    <section className="products-section">
+      <h2 className="section-title">Recomendados para ti</h2>
+      
+      {products.length === 0 ? (
+        <div className="no-products">
+          No se encontraron productos disponibles
+        </div>
+      ) : (
+        <>
+          <div className="products-grid">
+            {visibleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button 
+                onClick={handlePreviousPage} 
+                disabled={currentPage === 1}
+                className="pagination-button"
+              >
+                Anterior
+              </button>
+              
+              <span className="page-info">
+                Página {currentPage} de {totalPages}
+              </span>
+              
+              <button 
+                onClick={handleNextPage} 
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 
