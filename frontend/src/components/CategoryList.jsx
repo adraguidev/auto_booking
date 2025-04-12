@@ -1,47 +1,26 @@
 import React from 'react';
+import '../styles/CategoryList.css';
 
-function CategoryList() {
-  const categories = [
-    {
-      id: 1,
-      name: 'Sedán',
-      icon: '🚗',
-      description: 'Autos cómodos y elegantes'
-    },
-    {
-      id: 2,
-      name: 'SUV',
-      icon: '🚙',
-      description: 'Vehiculos espaciosos y versátiles'
-    },
-    {
-      id: 3,
-      name: 'Deportivo',
-      icon: '🏎️',
-      description: 'Autos de alto rendimiento'
-    },
-    {
-      id: 4,
-      name: 'Económico',
-      icon: '🚘',
-      description: 'Opciones accesibles'
-    }
-  ];
-
+const CategoryList = ({ categories, activeCategory, onCategoryClick }) => {
   return (
-    <section className="categories-section">
-      <h2 className="section-title">Explora por categoría</h2>
+    <div className="category-list">
+      <h3>Categorías</h3>
       <div className="categories-grid">
-        {categories.map((category) => (
-          <div key={category.id} className="category-card">
-            <div className="category-icon">{category.icon}</div>
-            <h3 className="category-name">{category.name}</h3>
-            <p className="category-description">{category.description}</p>
-          </div>
+        {categories.map(category => (
+          <button
+            key={category.id}
+            className={`category-item ${activeCategory === category.id ? 'active' : ''}`}
+            onClick={() => onCategoryClick(category.id)}
+          >
+            <span className="category-name">{category.name}</span>
+            {category.productCount && (
+              <span className="product-count">({category.productCount})</span>
+            )}
+          </button>
         ))}
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default CategoryList; 

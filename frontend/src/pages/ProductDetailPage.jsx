@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../styles/ProductDetailPage.css';
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -45,6 +46,51 @@ function ProductDetailPage() {
 
   return (
     <div className="product-detail">
+      <div className="product-header">
+        <h1>{product.name}</h1>
+        {product.category && (
+          <span className="product-category">{product.category.name}</span>
+        )}
+      </div>
+
+      <div className="product-content">
+        <div className="product-image">
+          {product.imageUrl ? (
+            <img src={product.imageUrl} alt={product.name} />
+          ) : (
+            <div className="image-placeholder">Sin imagen</div>
+          )}
+        </div>
+
+        <div className="product-info">
+          <div className="product-description">
+            <h2>Descripción</h2>
+            <p>{product.description || 'No hay descripción disponible'}</p>
+          </div>
+
+          {product.features && product.features.length > 0 && (
+            <div className="product-features">
+              <h2>Características</h2>
+              <ul className="features-list">
+                {product.features.map(feature => (
+                  <li key={feature.id} className="feature-item">
+                    <i className={feature.icon || 'fas fa-check'}></i>
+                    <span>{feature.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {product.location && (
+            <div className="product-location">
+              <h2>Ubicación</h2>
+              <p>{product.location}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="product-detail-header">
         <button onClick={() => navigate(-1)} className="back-button">
           ← Volver
@@ -52,37 +98,23 @@ function ProductDetailPage() {
         <h2 className="product-title">{product.name}</h2>
       </div>
 
-      <div className="product-content">
-        <div className="product-gallery">
-          <div className="main-image">
-            <img src={product.images[0]} alt={product.name} />
-          </div>
-          <div className="gallery-thumbnails">
-            {product.images.slice(1, 5).map((image, index) => (
-              <div key={index} className="thumbnail">
-                <img src={image} alt={`${product.name} - Vista ${index + 2}`} />
-              </div>
-            ))}
-          </div>
-          <button 
-            className="view-more-button"
-            onClick={() => setShowModal(true)}
-          >
-            Ver más
-          </button>
+      <div className="product-gallery">
+        <div className="main-image">
+          <img src={product.images[0]} alt={product.name} />
         </div>
-
-        <div className="product-info">
-          <h3>Descripción</h3>
-          <p>{product.description || 'No hay descripción disponible'}</p>
-          
-          {product.location && (
-            <div className="product-location">
-              <h3>Ubicación</h3>
-              <p>{product.location}</p>
+        <div className="gallery-thumbnails">
+          {product.images.slice(1, 5).map((image, index) => (
+            <div key={index} className="thumbnail">
+              <img src={image} alt={`${product.name} - Vista ${index + 2}`} />
             </div>
-          )}
+          ))}
         </div>
+        <button 
+          className="view-more-button"
+          onClick={() => setShowModal(true)}
+        >
+          Ver más
+        </button>
       </div>
 
       {showModal && (
