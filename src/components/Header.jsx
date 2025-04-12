@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom';
+import logoPlaceholder from '../assets/logo-placeholder.png';
 
 function Header() {
   return (
     <header className="header">
       <div className="header-content">
-        <h1>
-          <Link to="/" className="logo">Reserva de Autos</Link>
-        </h1>
-        <nav>
-          <Link to="/" className="nav-link">Inicio</Link>
-          <Link to="/admin" className="nav-link">Panel de Administración</Link>
-          {/* Estos enlaces se activarán en el Sprint 2 */}
-          <Link to="/login" className="nav-link disabled">Iniciar Sesión</Link>
-          <Link to="/register" className="nav-link disabled">Registrarse</Link>
+        <div className="header-left">
+          <Link to="/" className="logo-container">
+            <img src={logoPlaceholder} alt="ReservaAutos Logo" className="logo-image" />
+            <h1 className="logo-text">ReservaAutos</h1>
+          </Link>
+          <span className="slogan">Tu auto ideal a un clic de distancia</span>
+        </div>
+        
+        <nav className="header-right">
+          <Link to="/register" className="nav-button register">Crear cuenta</Link>
+          <Link to="/login" className="nav-button login">Iniciar sesión</Link>
         </nav>
       </div>
     </header>
