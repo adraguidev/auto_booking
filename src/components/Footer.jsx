@@ -1,26 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div className="footer-section">
-          <h3>AutoBooking</h3>
-          <p>Tu plataforma confiable para alquiler de autos</p>
+        <div className="footer-left">
+          <Link to="/" className="footer-logo">
+            AutoBooking
+          </Link>
+          <p className="copyright">
+            © {currentYear} AutoBooking. Todos los derechos reservados.
+          </p>
         </div>
-        <div className="footer-section">
-          <h3>Contacto</h3>
-          <p>Email: info@autobooking.com</p>
-          <p>Teléfono: +123 456 7890</p>
+        
+        <div className="footer-right">
+          <div className="footer-links">
+            <Link to="/terminos">Términos y condiciones</Link>
+            <Link to="/privacidad">Política de privacidad</Link>
+            <Link to="/contacto">Contacto</Link>
+          </div>
         </div>
-        <div className="footer-section">
-          <h3>Legal</h3>
-          <p>Términos y condiciones</p>
-          <p>Política de privacidad</p>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <p>&copy; 2024 AutoBooking. Todos los derechos reservados.</p>
       </div>
     </footer>
   );
