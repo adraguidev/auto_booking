@@ -2,11 +2,16 @@ const express = require('express');
 const router = express.Router();
 const productRoutes = require('./productRoutes');
 const categoryRoutes = require('./categoryRoutes');
+const authRoutes = require('./authRoutes');
+const { authMiddleware, adminMiddleware } = require('../config/security');
 
-// Rutas de productos
+// Rutas públicas
+router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
-
-// Rutas de categorías
 router.use('/categories', categoryRoutes);
+
+// Rutas protegidas
+router.use('/admin/products', authMiddleware, adminMiddleware, productRoutes);
+router.use('/admin/categories', authMiddleware, adminMiddleware, categoryRoutes);
 
 module.exports = router; 
