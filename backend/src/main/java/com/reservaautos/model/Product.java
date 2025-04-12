@@ -2,9 +2,13 @@ package com.reservaautos.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -25,15 +29,4 @@ public class Product {
     private String imageUrl;
     
     private String location;
-    
-    // Constructor sin argumentos requerido por JPA
-    public Product() {
-    }
-    
-    // Constructor con campos obligatorios
-    public Product(String name, String description, String imageUrl) {
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-    }
 } 

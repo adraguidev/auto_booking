@@ -1,0 +1,10 @@
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/exception/DuplicateEntityException.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/service/AutoService.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/repository/AutoRepository.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/service/ProductService.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/ReservaAutosApplication.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/controller/ProductController.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/controller/AutoController.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/model/Auto.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/repository/ProductRepository.java
+/Users/adragui/Developer/auto_booking/backend/src/main/java/com/reservaautos/model/Product.java
