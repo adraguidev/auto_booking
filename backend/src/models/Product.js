@@ -20,10 +20,11 @@ const productSchema = new mongoose.Schema({
     ref: 'Category',
     required: true
   },
-  images: [{
-    type: String
-  }],
   features: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Feature'
+  }],
+  images: [{
     type: String
   }],
   availability: {
