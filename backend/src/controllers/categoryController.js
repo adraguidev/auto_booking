@@ -1,9 +1,10 @@
 const Category = require('../models/Category');
+const categoryService = require('../services/categoryService');
 
 // Obtener todas las categorías
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await categoryService.getAllCategories();
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -25,16 +26,20 @@ exports.getCategoryById = async (req, res) => {
 
 // Crear una nueva categoría
 exports.createCategory = async (req, res) => {
-  const category = new Category({
-    name: req.body.name,
-    description: req.body.description
-  });
-
   try {
-    const newCategory = await category.save();
-    res.status(201).json(newCategory);
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'El nombre de la categoría es requerido' });
+    }
+
+    const category = await categoryService.createCategory(name);
+    res.status(201).json(category);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.message.includes('Ya existe')) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -59,14 +64,15 @@ exports.updateCategory = async (req, res) => {
 // Eliminar una categoría
 exports.deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
-    if (!category) {
-      return res.status(404).json({ message: 'Categoría no encontrada' });
-    }
-
-    await category.deleteOne();
-    res.json({ message: 'Categoría eliminada correctamente' });
+    await categoryService.deleteCategory(req.params.id);
+    res.status(204).send();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.name === 'CategoryInUseError') {
+      res.status(400).json({ message: error.message });
+    } else if (error.message.includes('no encontrada')) {
+      res.status(404).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 }; 
