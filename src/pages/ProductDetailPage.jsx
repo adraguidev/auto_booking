@@ -1,20 +1,37 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import api from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function ProductDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await api.get(`/products/${id}`);
-        setProduct(response.data);
-      } catch (error) {
-        console.error('Error al cargar el producto:', error);
-      } finally {
+        const response = await fetch(`http://localhost:8080/api/products/${id}`);
+        if (!response.ok) {
+          throw new Error('Error al cargar el producto');
+        }
+        const data = await response.json();
+        // Agregamos imágenes de ejemplo para la galería
+        const productWithGallery = {
+          ...data,
+          images: [
+            data.imageUrl,
+            data.imageUrl,
+            data.imageUrl,
+            data.imageUrl,
+            data.imageUrl
+          ]
+        };
+        setProduct(productWithGallery);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
         setLoading(false);
       }
     };
@@ -22,15 +39,71 @@ function ProductDetailPage() {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <div>Cargando...</div>;
-  if (!product) return <div>Producto no encontrado</div>;
+  if (loading) return <div className="loading">Cargando producto...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+  if (!product) return <div className="no-product">Producto no encontrado</div>;
 
   return (
     <div className="product-detail">
-      <img src={product.imageUrl} alt={product.name} />
-      <h1>{product.name}</h1>
-      <p>{product.description}</p>
-      <p>Ubicación: {product.location}</p>
+      <div className="product-detail-header">
+        <button onClick={() => navigate(-1)} className="back-button">
+          ← Volver
+        </button>
+        <h2 className="product-title">{product.name}</h2>
+      </div>
+
+      <div className="product-content">
+        <div className="product-gallery">
+          <div className="main-image">
+            <img src={product.images[0]} alt={product.name} />
+          </div>
+          <div className="gallery-thumbnails">
+            {product.images.slice(1, 5).map((image, index) => (
+              <div key={index} className="thumbnail">
+                <img src={image} alt={`${product.name} - Vista ${index + 2}`} />
+              </div>
+            ))}
+          </div>
+          <button 
+            className="view-more-button"
+            onClick={() => setShowModal(true)}
+          >
+            Ver más
+          </button>
+        </div>
+
+        <div className="product-info">
+          <h3>Descripción</h3>
+          <p>{product.description || 'No hay descripción disponible'}</p>
+          
+          {product.location && (
+            <div className="product-location">
+              <h3>Ubicación</h3>
+              <p>{product.location}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button 
+              className="close-modal"
+              onClick={() => setShowModal(false)}
+            >
+              ×
+            </button>
+            <div className="modal-gallery">
+              {product.images.map((image, index) => (
+                <div key={index} className="modal-image">
+                  <img src={image} alt={`${product.name} - Vista ${index + 1}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
