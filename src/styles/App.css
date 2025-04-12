@@ -148,42 +148,60 @@
 }
 
 .product-card {
-  border: 1px solid #ddd;
-  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  background-color: white;
   border-radius: 8px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  width: 100%;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.product-card img {
+.product-image-container {
+  position: relative;
   width: 100%;
-  height: 200px;
+  padding-top: 66.67%; /* Proporción 3:2 */
+  overflow: hidden;
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
 }
 
-.product-card h2 {
-  margin: 1rem 0;
-  font-size: 1.25rem;
+.product-info {
+  padding: 1rem;
 }
 
-.product-card a {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #333;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+.product-name {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
 }
 
-.product-card a:hover {
-  background-color: #444;
+.product-category {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Media queries para responsividad */
+@media (min-width: 768px) {
+  .product-card {
+    width: calc(50% - 1rem);
+  }
 }
 
 .footer {
