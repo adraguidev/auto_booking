@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AdminPanel from './pages/AdminPanel';
@@ -10,11 +10,12 @@ function App() {
     <Router>
       <div className="app">
         <Header />
-        <main>
+        <main className="main">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products/:id" element={<ProductDetailPage />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/*" element={<AdminPanel />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <Footer />
