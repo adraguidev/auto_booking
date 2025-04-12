@@ -2,7 +2,13 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 80px; /* Espacio para el header fijo */
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px; /* Altura del header */
+  padding-bottom: 2rem;
+  background-color: #f8f9fa;
 }
 
 .header {
@@ -570,5 +576,12 @@
   .pagination {
     flex-direction: column;
     gap: 0.5rem;
+  }
+}
+
+/* Ajustes para el layout general */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 60px; /* Altura reducida del header en móvil */
   }
 } 
