@@ -8,19 +8,20 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import AdminPanel from './pages/AdminPanel';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import { useAuth } from './context/AuthContext';
 import './styles/App.css';
 
-// Componente wrapper para rutas protegidas
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
-};
-
-// Componente wrapper para rutas de administrador
-const AdminRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user?.isAdmin ? children : <Navigate to="/" />;
+const PrivateRoute = ({ children, adminOnly = false }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  
+  if (adminOnly && user.role !== 'ADMIN') {
+    return <Navigate to="/" />;
+  }
+  
+  return children;
 };
 
 function App() {
@@ -32,17 +33,20 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/products/:id" element={<ProductDetailPage />} />
+              
               <Route
                 path="/admin/*"
                 element={
-                  <AdminRoute>
+                  <PrivateRoute adminOnly>
                     <AdminPanel />
-                  </AdminRoute>
+                  </PrivateRoute>
                 }
               />
+              
+              <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </main>
           <Footer />
